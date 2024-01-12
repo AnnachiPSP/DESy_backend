@@ -14,7 +14,6 @@ router.get('/', controller.getStudents);
 router.post('/signup', controller.addStudent);
 router.post('/login', controller.loginStudent);
 router.get('/check', controller.checkStudentExist);
-router.get('/isnew', verifyUser, controller.checkStudentNew);
-router.get('/:id', controller.getStudentById);
+router.get('/isnew', verifyUser, controller.checkStudentNew); // Bug 
 
 module.exports = router;

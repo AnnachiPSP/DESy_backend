@@ -44,8 +44,8 @@ const addStudent = (req, res) => {
 }
 
 const loginStudent = (req, res) => {
-    const {student_mail, student_password} = req.body;
-    pool.query(query.loginStudent, [student_mail], (err, result) => {
+    const {student_username, student_password} = req.body;
+    pool.query(query.loginStudent, [student_username], (err, result) => {
         if(err) throw err;
         if (result.rowCount == 0) return res.json({Success: 1, msg: "No such user"});
         else {
