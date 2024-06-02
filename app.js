@@ -1,9 +1,9 @@
-const express = require('express');
-const ApplicationRoutes = require('./src/application/routes');
-const StudentRoutes = require('./src/student/routes');
-const privateStudent = require('./src/private/routes')
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
+const express = require('express')
+const StudentRoutes = require('./src/student/routes')
+const PrivateStudent = require('./src/private/routes')
+const GeneralRoutes = require('./src/common/routes')
+const cors = require('cors')
+const cookieParser = require('cookie-parser')
 
 
 const app = express();
@@ -21,15 +21,13 @@ app.use(cors({
 app.use(cookieParser());
 
 // API calls
-app.get('/api', (req, res) => {
-    res.send("DESy Backend");
-});
+app.use('/api/v1', GeneralRoutes);
 
-app.use('/api/v1/application', ApplicationRoutes);
+
 app.use('/api/v1/student', StudentRoutes);
 
 
-app.use('/pvt_api', privateStudent); // Debug route!
+app.use('/pvt_api', PrivateStudent); // Debug route!
 
 // Server running
 app.listen(PORT, () => {

@@ -3,7 +3,9 @@ CREATE TABLE Institute (
   institute_name VARCHAR NOT NULL,
   institute_location VARCHAR NOT NULL,
   admin_mail VARCHAR NOT NULL,
-  admin_password VARCHAR NOT NULL
+  admin_password VARCHAR NOT NULL,
+  web_domain VARCHAR NOT NULL,
+  logo_path VARCHAR
 );
 
 CREATE TABLE Admission_Criteria (
@@ -16,11 +18,12 @@ CREATE TABLE Admission_Criteria (
 );
 
 CREATE TABLE Institute_Branch (
-  institute_branch_id INT,
+  institute_id INT,
   branch VARCHAR(3) NOT NULL,
   admission_criteria_id INT NOT NULL,
+  branch_icon VARCHAR(25) NOT NULL,
   CHECK (branch IN ('CSE', 'ECE', 'AI')),
-  FOREIGN KEY (institute_branch_id) REFERENCES Institute(id),
+  FOREIGN KEY (institute_id) REFERENCES Institute(id),
   FOREIGN KEY (admission_criteria_id) REFERENCES Admission_Criteria(id)
 );
 
@@ -61,6 +64,13 @@ CREATE TABLE Application (
   CHECK (status IN ('PENDING', 'ACCEPTED', 'REJECTED'))
 );
 
+CREATE TABLE Consortium (
+  consortium_id SERIAL PRIMARY KEY,
+  institute_id INT NOT NULL,
+  consortium_name VARCHAR,
+  FOREIGN KEY (institute_id) REFERENCES Institute(id)
+);
+
 CREATE TABLE Institute1_Students (
   id SERIAL PRIMARY KEY,
   name VARCHAR NOT NULL,
@@ -72,10 +82,11 @@ CREATE TABLE Institute1_Students (
 
 -- Populating the Database
 
-INSERT INTO Institute (institute_name, institute_location, admin_mail, admin_password) VALUES ('IIITD', 'Delhi', 'admin-btech@iiitd.in', 'admin123');
-INSERT INTO Institute (institute_name, institute_location, admin_mail, admin_password) VALUES ('NSUT', 'Delhi', 'admin-bachelor@nsut.in', '123admin');
-INSERT INTO Institute (institute_name, institute_location, admin_mail, admin_password) VALUES ('IITD', 'Delhi', 'admin-main-btech@iitd.ac.in', 'adminABC');
-INSERT INTO Institute (institute_name, institute_location, admin_mail, admin_password) VALUES ('DTU', 'Delhi', 'admin-main-bachelor@dtu.in', 'ABCadmin');
+INSERT INTO Institute (institute_name, institute_location, admin_mail, admin_password, web_domain) VALUES ('IIITD', 'Delhi', 'admin-btech@iiitd.in', 'admin123', 'https://iiitd.ac.in/');
+INSERT INTO Institute (institute_name, institute_location, admin_mail, admin_password, web_domain) VALUES ('NSUT', 'Delhi', 'admin-bachelor@nsut.in', '123admin', 'http://nsut.ac.in/');
+INSERT INTO Institute (institute_name, institute_location, admin_mail, admin_password, web_domain) VALUES ('IITD', 'Delhi', 'admin-main-btech@iitd.ac.in', 'adminABC', 'https://home.iitd.ac.in/');
+INSERT INTO Institute (institute_name, institute_location, admin_mail, admin_password, web_domain) VALUES ('DTU', 'Delhi', 'admin-main-bachelor@dtu.in', 'ABCadmin', 'https://dtu.ac.in');
+INSERT INTO Institute (institute_name, institute_location, admin_mail, admin_password, web_domain) VALUES ('NITD', 'Delhi', 'admin-btech@nitd.ac.in', 'SuperAdmin', 'https://nitdelhi.ac.in/');
 
 INSERT INTO Admission_Criteria (min_jee_rank, min_class_12_mark, min_class_10_mark, min_age, admission_capacity) VALUES (5000, 95, 90, 18, 200);
 INSERT INTO Admission_Criteria (min_jee_rank, min_class_12_mark, min_class_10_mark, min_age, admission_capacity) VALUES (2000, 95, 90, 18, 100);
@@ -86,18 +97,27 @@ INSERT INTO Admission_Criteria (min_jee_rank, min_class_12_mark, min_class_10_ma
 INSERT INTO Admission_Criteria (min_jee_rank, min_class_12_mark, min_class_10_mark, min_age, admission_capacity) VALUES (1000, 97, 95, 19, 150);
 INSERT INTO Admission_Criteria (min_jee_rank, min_class_12_mark, min_class_10_mark, min_age, admission_capacity) VALUES (10000, 95, 95, 18, 250);
 
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (1, 'CSE', 2);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (1, 'AI', 4);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (1, 'ECE', 8);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (2, 'CSE', 3);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (2, 'AI', 4);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (2, 'ECE', 7);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (3, 'CSE', 5);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (3, 'ECE', 1);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (3, 'AI', 6);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (4, 'CSE', 4);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (4, 'AI', 5);
-INSERT INTO Institute_Branch (institute_branch_id, branch, admission_criteria_id) VALUES (4, 'ECE', 6);
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (1, 'CSE', 2, 'bi-laptop');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (1, 'AI', 4, 'bi-robot');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (1, 'ECE', 8, 'bi-cpu');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (2, 'CSE', 3, 'bi-laptop');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (2, 'AI', 4, 'bi-robot');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (2, 'ECE', 7, 'bi-cpu');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (3, 'CSE', 5, 'bi-laptop');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (3, 'ECE', 1, 'bi-cpu');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (3, 'AI', 6, 'bi-robot');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (4, 'CSE', 4, 'bi-laptop');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (4, 'AI', 5, 'bi-robot');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (4, 'ECE', 6, 'bi-cpu');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (5, 'CSE', 1, 'bi-laptop');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (5, 'AI', 5, 'bi-robot');
+INSERT INTO Institute_Branch (institute_id, branch, admission_criteria_id, branch_icon) VALUES (5, 'ECE', 1, 'bi-cpu');
+
+INSERT INTO Consortium (institute_id, consortium_name) VALUES (1, 'First_Consortium');
+INSERT INTO Consortium (institute_id, consortium_name) VALUES (3, 'First_Consortium');
+INSERT INTO Consortium (institute_id, consortium_name) VALUES (5, 'First_Consortium');
+INSERT INTO Consortium (institute_id, consortium_name) VALUES (2, 'Second_Consortium');
+INSERT INTO Consortium (institute_id, consortium_name) VALUES (4, 'Second_Consortium');
 
 INSERT INTO Student (student_username, phone_number, student_mail, student_password) VALUES ('surya2020', '+919657421563', 'suryatest@gmail.com', '12345');
 
