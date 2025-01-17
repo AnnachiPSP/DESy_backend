@@ -80,7 +80,7 @@ const checkStudentNew = async (req, res) => {
                     console.error('Database error:', err);
                     return res.json({ Success: 0, error: 'Database error' });
                 } else {
-                    return res.json({ Success: 1, isNew: results.rows[0]['is_new'] });
+                    return res.json({ Success: 1, isNew: results.rows[0]['is_new'], user: student });
                 }
             });
         } else {
@@ -135,7 +135,7 @@ const eligibleInstitutes = async (req, res) => {
                 if(err) throw err;
         
                 if(result.rowCount>0) {
-                    res.json({Success: 1, data: result.rows});
+                    res.json({Success: 1, name: student, data: result.rows});
                 }
                 else res.json({Success: 2});
             });

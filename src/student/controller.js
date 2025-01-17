@@ -52,10 +52,16 @@ const loginStudent = (req, res) => {
             bcrypt.compare(student_password, result.rows[0]['student_password'], (err1, result1)=> {
                 if(result1) {
                     const token = jwt.sign(
-                        {name: result.rows[0]['student_username'], role: "student"}, 
-                        "desy-secret", 
-                        {expiresIn: '1d'}
+                        {name: result.rows[0]['student_username'], role: "student"}, // User Info and his Role
+                        "desy-secret",                                               // Secret Signing
+                        {expiresIn: '1d'}                                            // Validity of Cookie
                     );
+                    
+                /*
+                    path: '/': Makes the cookie available to all routes of the application.
+                    domain: 'localhost': Restricts the cookie to the localhost domain. This is useful in development 
+                    but should be configured differently in production. 
+                */
                     res.cookie('token', token, { path: '/', domain: 'localhost'});
                     return res.json({Success: 2, msg: "Login Succesful"})
                 } else {
@@ -64,6 +70,12 @@ const loginStudent = (req, res) => {
             })
         }
     })
+}
+
+const logoutStudent = (req, res) => {
+    console.log("getting the request!!")
+    res.clearCookie('token', { path: '/', domain: 'localhost' });
+    return res.json({ Success: 1, msg: "Logout Successful" });
 }
 
 const checkStudentNew = (req, res) => {
@@ -76,5 +88,6 @@ module.exports = {
     checkStudentExist,
     addStudent,
     loginStudent,
+    logoutStudent,
     checkStudentNew
 }
